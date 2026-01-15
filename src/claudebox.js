@@ -400,6 +400,11 @@ class SeatbeltSandbox extends Sandbox {
 			? realpath(claudeJson)
 			: path.join(realpath(path.dirname(claudeJson)), path.basename(claudeJson));
 
+		// User cache directories needed for npm/node operations
+		const home = process.env.HOME;
+		const libraryCaches = path.join(home, "Library/Caches");
+		const npmCache = path.join(home, ".npm");
+
 		// Build dynamic policy
 		const writablePaths = [
 			'(subpath (param "PROJECT_DIR"))',
@@ -407,6 +412,8 @@ class SeatbeltSandbox extends Sandbox {
 			'(subpath (param "LOGFILE_DIR"))',
 			'(subpath (param "CLAUDE_CONFIG"))',
 			'(literal (param "CLAUDE_JSON"))',
+			'(subpath (param "LIBRARY_CACHES"))',
+			'(subpath (param "NPM_CACHE"))',
 		];
 
 		if (canonicalTmpdir !== canonicalSlashTmp) {
@@ -438,6 +445,8 @@ class SeatbeltSandbox extends Sandbox {
 			`-DLOGFILE_DIR=${path.dirname(logfile)}`,
 			`-DCLAUDE_CONFIG=${canonicalClaudeConfig}`,
 			`-DCLAUDE_JSON=${canonicalClaudeJson}`,
+			`-DLIBRARY_CACHES=${libraryCaches}`,
+			`-DNPM_CACHE=${npmCache}`,
 		];
 
 		if (canonicalTmpdir !== canonicalSlashTmp) {
