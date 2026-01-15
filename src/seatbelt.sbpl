@@ -24,6 +24,19 @@
     (path "/dev/null")
     (vnode-type CHARACTER-DEVICE)))
 
+; Allow TTY/PTY operations for terminal handling
+; This is needed for terminal size detection (TIOCGWINSZ) and interactive use
+(allow file-ioctl
+  (vnode-type TTY)
+  (vnode-type CHARACTER-DEVICE))
+
+; Allow read/write to TTY devices for interactive terminal
+(allow file-read-data file-write-data
+  (vnode-type TTY))
+
+; Allow pseudoterminal operations
+(allow pseudo-tty)
+
 ; Sysctls permitted - CPU/kernel info needed by Node.js and various tools
 (allow sysctl-read
   (sysctl-name "hw.activecpu")
